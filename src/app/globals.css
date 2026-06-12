@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg:      #0a0a0f;
+    --color-surface: #13131a;
+    --color-card:    #1a1a24;
+    --color-border:  #2a2a38;
+    --color-accent:  #fe2c55;
+    --color-cyan:    #25f4ee;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--color-bg);
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 font-bold
+           rounded-xl px-6 py-3.5 text-sm text-white transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    background: linear-gradient(135deg, #fe2c55, #c2185b);
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply -translate-y-px;
+    box-shadow: 0 8px 25px rgba(254,44,85,0.3);
+    filter: brightness(1.1);
+  }
+
+  .btn-download {
+    @apply inline-flex items-center gap-2 font-semibold rounded-xl
+           px-4 py-2.5 text-sm text-white transition-all duration-200;
+    background: linear-gradient(135deg, #fe2c55, #c2185b);
+  }
+  .btn-download:hover {
+    filter: brightness(1.15);
+    @apply -translate-y-px;
+    box-shadow: 0 6px 20px rgba(254,44,85,0.3);
+  }
+  .btn-download.mp3 {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  }
+  .btn-download.mp3:hover {
+    box-shadow: 0 6px 20px rgba(124,58,237,0.35);
+  }
+
+  .card {
+    @apply rounded-2xl border;
+    background: var(--color-card);
+    border-color: var(--color-border);
+  }
+
+  .input-ring {
+    @apply relative rounded-2xl p-0.5;
+    background: linear-gradient(135deg, #fe2c55, #25f4ee, #fe2c55);
+    background-size: 300% 300%;
+    animation: gradientShift 4s ease infinite;
+  }
+  .input-ring input {
+    @apply w-full rounded-[14px] px-5 py-4 text-sm text-white outline-none
+           placeholder:text-[#555570];
+    background: var(--color-surface);
+  }
+
+  .shimmer-box {
+    @apply rounded-xl;
+    background: linear-gradient(
+      90deg,
+      var(--color-card) 25%,
+      var(--color-border) 50%,
+      var(--color-card) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+}
+
+/* Animations not in Tailwind config */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
