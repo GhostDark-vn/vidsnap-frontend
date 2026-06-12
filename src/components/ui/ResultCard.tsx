@@ -14,27 +14,34 @@ export default function ResultCard({ data, onReset }: Props) {
   const [progress, setProgress]       = useState(0);
 
   async function handleDownload(item: DownloadOption, idx: number) {
-    setDownloading(idx);
-    setProgress(0);
+  setDownloading(idx);
+  setProgress(0);
 
-    const filename = `vidsnap_${data.id}.${item.ext}`;
-    const proxyUrl = buildProxyUrl(item.url, filename);
+  const filename = `vidsnap_${data.id}.${item.ext}`;
 
-    try {
-      // Simulate progress then open download
-      for (let p = 0; p <= 80; p += 20) {
-        await new Promise((r) => setTimeout(r, 150));
-        setProgress(p);
-      }
-      const a = document.createElement("a");
-      a.href = proxyUrl;
-      a.download = filename;
-      a.click();
-      setProgress(100);
-    } finally {
-      setTimeout(() => { setDownloading(null); setProgress(0); }, 800);
+  try {
+    for (let p = 0; p <= 80; p += 20) {
+      await new Promise((r) => setTimeout(r, 150));
+      setProgress(p);
     }
+
+    // Thử download trực tiếp trước
+    const a = document.createElement("a");
+    a.href = item.url;  // URL trực tiếp từ TikTok CDN
+    a.download = filename;
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    setProgress(100);
+  } finally {
+    setTimeout(() => {
+      setDownloading(null);
+      setProgress(0);
+    }, 800);
   }
+}
 
   const videoOptions  = data.downloads.filter((d) => d.media_type === "video");
   const audioOptions  = data.downloads.filter((d) => d.media_type === "audio");
