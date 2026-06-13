@@ -17,22 +17,24 @@ export default function ResultCard({ data, onReset }: Props) {
   setDownloading(idx);
   setProgress(0);
 
+  const API_URL = "https://vidsnap-backend-production-dacb.up.railway.app";
   const filename = `vidsnap_${data.id}.${item.ext}`;
 
-  // Luôn dùng proxy — không download trực tiếp từ TikTok CDN
-  const API_URL = "https://vidsnap-backend-production-dacb.up.railway.app";
-const params = new URLSearchParams({ url: item.url, filename });
-// Dùng ytdlp-download thay vì proxy
-const proxyUrl = `${API_URL}/api/v1/ytdlp-download?${params}`;
-
   try {
-    for (let p = 0; p <= 80; p += 20) {
-      await new Promise((r) => setTimeout(r, 150));
+    for (let p = 0; p <= 60; p += 20) {
+      await new Promise((r) => setTimeout(r, 200));
       setProgress(p);
     }
 
+    // Luôn dùng ytdlp-download — tải qua server, không trực tiếp CDN
+    const params = new URLSearchParams({
+      url: item.url,
+      filename,
+    });
+    const downloadUrl = `${API_URL}/api/v1/ytdlp-download?${params}`;
+
     const a = document.createElement("a");
-    a.href = proxyUrl;
+    a.href = downloadUrl;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
@@ -42,7 +44,7 @@ const proxyUrl = `${API_URL}/api/v1/ytdlp-download?${params}`;
     setTimeout(() => {
       setDownloading(null);
       setProgress(0);
-    }, 800);
+    }, 1000);
   }
 }
 
