@@ -20,10 +20,10 @@ export default function ResultCard({ data, onReset }: Props) {
   const filename = `vidsnap_${data.id}.${item.ext}`;
 
   // Luôn dùng proxy — không download trực tiếp từ TikTok CDN
-  const API_URL = process.env.NEXT_PUBLIC_API_URL ||
-    "https://vidsnap-backend.up.railway.app";
-  const params = new URLSearchParams({ url: item.url, filename });
-  const proxyUrl = `${API_URL}/api/v1/proxy?${params}`;
+  const API_URL = "https://vidsnap-backend-production-dacb.up.railway.app";
+const params = new URLSearchParams({ url: item.url, filename });
+// Dùng ytdlp-download thay vì proxy
+const proxyUrl = `${API_URL}/api/v1/ytdlp-download?${params}`;
 
   try {
     for (let p = 0; p <= 80; p += 20) {
