@@ -1,6 +1,6 @@
 import type { DownloadResponse } from "@/types";
 
-const API_URL = "https://vidsnap-backend-production-dacb.up.railway.app";
+const API_URL = "https://vidsnap-backend-production-dacb.up.railway.app"; 
 
 export class ApiError extends Error {
   constructor(
