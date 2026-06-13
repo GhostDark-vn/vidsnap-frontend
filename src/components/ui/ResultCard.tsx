@@ -15,34 +15,48 @@ export default function ResultCard({ data, onReset }: Props) {
   const [progress, setProgress] = useState(0);
 
   async function handleDownload(item: DownloadOption, idx: number) {
-    setDownloading(idx);
-    setProgress(0);
+  setDownloading(idx);
+  setProgress(0);
 
-    const filename = `vidsnap_${data.id}.${item.ext}`;
-    const params = new URLSearchParams({ url: item.url, filename });
-    const downloadUrl = `${API_URL}/api/v1/ytdlp-download?${params}`;
+  const filename = `vidsnap_${data.id}.${item.ext}`;
 
-    try {
-      // Hiển thị progress giả trong khi server đang xử lý
-      for (let p = 20; p <= 60; p += 20) {
-        await new Promise((r) => setTimeout(r, 300));
-        setProgress(p);
-      }
+  // Xác định quality từ height
+  let quality = "best";
+  if (item.height && item.height <= 480) quality = "480";
+  else if (item.height && item.height <= 720) quality = "720";
 
-      const a = document.createElement("a");
-      a.href = downloadUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setProgress(100);
-    } finally {
-      setTimeout(() => {
-        setDownloading(null);
-        setProgress(0);
-      }, 1000);
+  // Gửi URL TikTok gốc — không gửi CDN URL dễ expire
+  // URL gốc lấy từ author_url hoặc reconstruct từ video id
+  const tiktokUrl = data.author_url
+    ? `https://www.tiktok.com/@${data.author}/video/${data.id}`
+    : `https://www.tiktok.com/@${data.author}/video/${data.id}`;
+
+  const params = new URLSearchParams({
+    url: tiktokUrl,
+    filename,
+    quality,
+  });
+  const downloadUrl = `${API_URL}/api/v1/ytdlp-download?${params}`;
+
+  try {
+    for (let p = 20; p <= 60; p += 20) {
+      await new Promise((r) => setTimeout(r, 500));
+      setProgress(p);
     }
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setProgress(100);
+  } finally {
+    setTimeout(() => {
+      setDownloading(null);
+      setProgress(0);
+    }, 1000);
   }
+}
 
   const videoOptions = data.downloads.filter((d) => d.media_type === "video");
   const audioOptions = data.downloads.filter((d) => d.media_type === "audio");
