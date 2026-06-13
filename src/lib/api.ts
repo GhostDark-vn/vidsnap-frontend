@@ -1,8 +1,6 @@
 import type { DownloadResponse } from "@/types";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined" ? "" : "http://localhost:8000");
+const API_URL = "https://vidsnap-backend-production-cb7e.up.railway.app";
 
 export class ApiError extends Error {
   constructor(
