@@ -50,8 +50,8 @@ export function buildProxyUrl(directUrl: string, filename: string): string {
 
 export function formatDuration(seconds?: number): string {
   if (!seconds) return "";
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
+  const m = Math.floor(seconds / 30);
+  const s = seconds % 30;
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
